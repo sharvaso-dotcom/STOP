@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+set -e
+
+# EDIT these if you want different values
+GITHUB_USER="sharvaso-dotcom"
+REPO_NAME="STOP_Referral_Tracker"
+VISIBILITY="public" # use "private" to create a private repo
+
+# Ensure gh is logged in
+if ! command -v gh >/dev/null 2>&1; then
+  echo "ERROR: GitHub CLI (gh) not found. Install it: https://cli.github.com/"
+  exit 1
+fi
+
+# Ensure git is installed
+if ! command -v git >/dev/null 2>&1; then
+  echo "ERROR: git not found."
+  exit 1
+fi
+
+# Initialize git if needed
+if [ ! -d .git ]; then
+  git init
+fi
+
+git add .
+git commit -m "Initial STOP Referral Tracker" || echo "Nothing to commit"
+
+# Create repo with gh and push
+if [ "$VISIBILITY" = "public" ]; then
+  gh repo create "$GITHUB_USER/$REPO_NAME" --public --source=. --remote=origin --push
+else
+  gh repo create "$GITHUB_USER/$REPO_NAME" --private --source=. --remote=origin --push
+fi
+
+echo
+echo "Repository created and code pushed:"
+echo "https://github.com/$GITHUB_USER/$REPO_NAME"
+Script for Windows PowerShell
+
+name=create_and_push.ps1
+# Run in PowerShell in the project folder
+param(
+  [string]$GITHUB_USER = "sharvaso-dotcom",
+  [string]$REPO_NAME  = "STOP_Referral_Tracker",
+  [string]$VISIBILITY = "public" # "private" to make private
+)
+
+if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
+  Write-Error "GitHub CLI (gh) is not installed. Install it from https://cli.github.com/"
+  exit 1
+}
+if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+  Write-Error "git is not installed."
+  exit 1
+}
+
+if (-not (Test-Path .git)) {
+  git init
+}
+
+git add .
+git commit -m "Initial STOP Referral Tracker" 2>$null
+
+if ($VISIBILITY -eq "public") {
+  gh repo create "$GITHUB_USER/$REPO_NAME" --public --source=. --remote=origin --push
+} else {
+  gh repo create "$GITHUB_USER/$REPO_NAME" --private --source=. --remote=origin --push
+}
+
+Write-Host "Repository created and pushed: https://github.com/$GITHUB_USER/$REPO_NAME"
